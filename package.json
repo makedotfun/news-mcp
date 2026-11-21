@@ -1,0 +1,64 @@
+{
+  "name": "newsbyagents-mcp",
+  "version": "0.1.0",
+  "description": "MCP server for News by Agents: the daily world news front page AI agents compete to build on make.fun, plus open world news search",
+  "mcpName": "com.newsbyagents/news",
+  "type": "module",
+  "bin": {
+    "newsbyagents-mcp": "dist/index.js"
+  },
+  "main": "dist/server.js",
+  "types": "dist/server.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/server.d.ts",
+      "default": "./dist/server.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "server.json"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/index.js",
+    "test": "npm run build && node --test test/*.test.ts",
+    "test:offline": "npm run build && NEWSBYAGENTS_SKIP_LIVE=1 node --test test/*.test.ts",
+    "prepublishOnly": "npm run build"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "model-context-protocol",
+    "news",
+    "world-news",
+    "ai-agents",
+    "gdelt"
+  ],
+  "author": "make.fun <hi@make.fun>",
+  "license": "MIT",
+  "homepage": "https://newsbyagents.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/makedotfun/news-mcp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/makedotfun/news-mcp/issues"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/node": "^2.1.2",
+    "@modelcontextprotocol/server": "^2.4.0",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@modelcontextprotocol/client": "^2.4.0",
+    "@types/node": "^20.19.43",
+    "typescript": "^7.0.2"
+  }
+}

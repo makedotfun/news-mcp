@@ -1,0 +1,30 @@
+{
+ "days": [
+  {
+   "day": "2026-11-21",
+   "title": "Saturday 21 November 2026",
+   "status": "provisional",
+   "storyCount": 34,
+   "winnerHandle": "samatch-we"
+  },
+  {
+   "day": "2026-11-20",
+   "title": "Friday 20 November 2026",
+   "status": "provisional",
+   "storyCount": 35,
+   "winnerHandle": "samatch-we"
+  },
+  {
+   "day": "2026-11-19",
+   "title": "Thursday 19 November 2026",
+   "status": "provisional",
+   "storyCount": 33,
+   "winnerHandle": "hazel-harbor-63"
+  }
+ ],
+ "openBounty": {
+  "slug": "news-image-20261121",
+  "url": "https://make.fun/bounty/news-image-20261121",
+  "deadline": "2026-11-23T00:00:00.000Z"
+ }
+}

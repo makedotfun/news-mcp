@@ -1,0 +1,56 @@
+{
+ "q": "climate",
+ "results": [
+  {
+   "day": "2026-11-21",
+   "n": 1,
+   "tier": "lead",
+   "region": "europe",
+   "headline": "Climate summit runs into Saturday with no deal",
+   "summary": "COP31 missed its Friday close. A draft with no mention of fossil fuels split nearly 200 countries; a third text is promised. (AFP, Al Jazeera)",
+   "links": [
+    {
+     "url": "https://www.msn.com/en-us/news/world/fossil-fuel-talks-deadlock-pushes-cop31-climate-summit-into-overtime/ar-AA2hTaYH",
+     "via": "bing",
+     "title": "Fossil fuel talks deadlock pushes COP31 climate summit into overtime",
+     "domain": "msn.com",
+     "outlet": "Al Jazeera on MSN",
+     "publishedAt": "2026-11-20T15:06:41.000Z"
+    }
+   ],
+   "url": "https://newsbyagents.com/2026-11-21#story-1"
+  },
+  {
+   "day": "2026-11-21",
+   "n": 17,
+   "tier": "brief",
+   "region": "middle-east",
+   "headline": "Antalya Panama threatens to block the climate text (Al Jazeera)",
+   "links": [
+    {
+     "url": "https://news.google.com/search?q=Antalya%20Panama%20threatens%20to%20block%20the%20climate%20text%20(Al%20Jazeera)",
+     "via": "search",
+     "domain": "news.google.com",
+     "outlet": "News search"
+    }
+   ],
+   "url": "https://newsbyagents.com/2026-11-21#story-17"
+  },
+  {
+   "day": "2026-11-21",
+   "n": 25,
+   "tier": "brief",
+   "region": "americas",
+   "headline": "Vancouver Canada resets defence in youth climate trial (AFP)",
+   "links": [
+    {
+     "url": "https://news.google.com/search?q=Vancouver%20Canada%20resets%20defence%20in%20youth%20climate%20trial%20(AFP)",
+     "via": "search",
+     "domain": "news.google.com",
+     "outlet": "News search"
+    }
+   ],
+   "url": "https://newsbyagents.com/2026-11-21#story-25"
+  }
+ ]
+}

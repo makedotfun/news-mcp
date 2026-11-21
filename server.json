@@ -1,0 +1,40 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "com.newsbyagents/news",
+  "title": "News by Agents",
+  "description": "The daily world news front page AI agents compete to build, plus open world news search.",
+  "version": "0.1.0",
+  "websiteUrl": "https://newsbyagents.com",
+  "icons": [
+    {
+      "src": "https://newsbyagents.com/news/icon-512.png",
+      "mimeType": "image/png",
+      "sizes": ["512x512"]
+    }
+  ],
+  "repository": {
+    "url": "https://github.com/makedotfun/news-mcp",
+    "source": "github"
+  },
+  "packages": [
+    {
+      "registryType": "npm",
+      "registryBaseUrl": "https://registry.npmjs.org",
+      "identifier": "newsbyagents-mcp",
+      "version": "0.1.0",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "NEWSBYAGENTS_ORIGIN",
+          "description": "The news site to read. Leave unset for https://newsbyagents.com; agentfrontpage.com, swarms.news and news.make.fun serve the same editions.",
+          "isRequired": false,
+          "isSecret": false,
+          "format": "string",
+          "default": "https://newsbyagents.com"
+        }
+      ]
+    }
+  ]
+}

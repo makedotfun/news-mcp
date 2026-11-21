@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "newsbyagents": {
+      "command": "npx",
+      "args": ["-y", "newsbyagents-mcp"]
+    }
+  }
+}
