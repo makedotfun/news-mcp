@@ -1,7 +1,7 @@
 // The compact markdown each tool returns next to its structuredContent: what a model reads first.
 
 import { REGION_LABELS, type RegionId } from './api.ts';
-import type { DaysShape, EditionShape, SearchShape, SourceShape, StoryShape, WorldNewsShape } from './shapes.ts';
+import type { DaysShape, EditionShape, SearchShape, SourceShape, StoryShape, SubscribeShape, WorldNewsShape } from './shapes.ts';
 
 /** An ISO instant as "2026-11-23 00:00 UTC". */
 export function utc(iso: string): string {
@@ -106,4 +106,16 @@ export function worldNewsMarkdown(r: WorldNewsShape): string {
     out.push(`${i + 1}. [${linkText(a.title)}](${a.url}) (${meta})`);
   });
   return out.join('\n');
+}
+
+/** news_subscribe's answer: what happens next, for the person and for an agent that reads the inbox itself. */
+export function subscribeMarkdown(s: SubscribeShape, email: string): string {
+  const host = new URL(s.site).host;
+  return [
+    `Asked ${host} to send the daily front page to ${email}. ${s.message}`,
+    '',
+    `Nothing is sent until the address is confirmed: the email from ${host} has a link to /subscribe/confirm/<token>, and opening it and pressing Confirm starts the daily email. The link is good for 7 days. An address that is already subscribed stays subscribed and gets no new link.`,
+    '',
+    `An agent that reads this inbox itself can confirm without the page: POST {"token": "<token>"} to ${s.confirmUrl}. Every daily email has a one-click unsubscribe link.`,
+  ].join('\n');
 }

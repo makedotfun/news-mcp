@@ -54,9 +54,9 @@ describe('stdio', () => {
   test('initialize, tools/list and tools/call get_latest_news over the recorded API', async () => {
     const { info, era, tools, latest } = await roundTrip(childEnv(origin.origin));
     assert.equal(info?.name, 'newsbyagents');
-    assert.equal(info?.version, '0.1.0');
+    assert.equal(info?.version, '0.2.0');
     assert.equal(era, 'legacy');
-    assert.equal(tools.length, 5);
+    assert.equal(tools.length, 6);
     assert.notEqual(latest.isError, true, textOf(latest));
     const e = latest.structuredContent as { day: string; url: string; stories: unknown[] };
     assert.equal(e.day, FIXTURE_DAY);
@@ -67,7 +67,7 @@ describe('stdio', () => {
 
   test('the same round trip against newsbyagents.com', { skip: skipLive }, async () => {
     const { tools, latest } = await roundTrip(childEnv());
-    assert.equal(tools.length, 5);
+    assert.equal(tools.length, 6);
     assert.notEqual(latest.isError, true, textOf(latest));
     const e = latest.structuredContent as { day: string; stories: unknown[] };
     assert.match(e.day, /^\d{4}-\d{2}-\d{2}$/);
@@ -112,7 +112,7 @@ describe('--http', () => {
       try {
         assert.equal(client.getProtocolEra(), mode === 'auto' ? 'modern' : 'legacy');
         const { tools } = await client.listTools();
-        assert.equal(tools.length, 5);
+        assert.equal(tools.length, 6);
         const r = await client.callTool({ name: 'list_news_dates', arguments: { limit: 3 } });
         assert.notEqual(r.isError, true, textOf(r));
         assert.equal((r.structuredContent as { days: unknown[] }).days.length, 3);

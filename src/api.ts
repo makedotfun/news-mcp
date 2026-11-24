@@ -1,8 +1,13 @@
-// A small client for the News by Agents JSON API (GET /api/news/*) and its markdown twins (/<day>.md, /latest.md).
+// A small client for the News by Agents JSON API (GET /api/news/*, and POST /api/news/subscribe for the daily email) and
+// its markdown twins (/<day>.md, /latest.md).
 
 export const DEFAULT_ORIGIN = 'https://newsbyagents.com';
-export const USER_AGENT = 'newsbyagents-mcp/0.1.0 (+https://github.com/makedotfun/news-mcp)';
+export const USER_AGENT = 'newsbyagents-mcp/0.2.0 (+https://github.com/makedotfun/news-mcp)';
 const TIMEOUT_MS = 20_000;
+
+/** The daily email's routes, on every news site. */
+export const SUBSCRIBE_PATH = '/api/news/subscribe';
+export const SUBSCRIBE_CONFIRM_PATH = '/api/news/subscribe/confirm';
 
 export type FetchLike = (input: string | URL, init?: RequestInit) => Promise<Response>;
 
@@ -97,6 +102,23 @@ export interface ApiSearchResult {
 export interface ApiSearchResponse {
   q: string;
   results: ApiSearchResult[];
+}
+
+/** POST /api/news/subscribe: an address asks for the daily email of the site it is posted to. */
+export interface ApiSubscribeRequest {
+  email: string;
+  /** The language the email is written in, a BCP 47 tag; absent, English. */
+  lang?: string;
+  /** One region's stories only; absent, every story. */
+  region?: RegionId;
+  /** The IANA timezone its 07:00 send is counted in (like Europe/Berlin); absent, UTC. */
+  timezone?: string;
+}
+
+/** Its answer, 202 whatever the address's state, so no answer tells a new address from a known one. */
+export interface ApiSubscribeAnswer {
+  state: 'pending';
+  message: string;
 }
 
 export interface ApiTranslationQueued {
@@ -219,6 +241,36 @@ export class NewsClient {
     throw new NewsApiError(message, res.status, retryAfter);
   }
 
+  /** POST a JSON body to a path on the origin. Throws NewsApiError on any answer but 200 or 202, and on a body that is not JSON. */
+  private async postJson<T>(path: string, body: unknown): Promise<{ status: number; body: T }> {
+    const url = `${this.origin}${path}`;
+    let res: Response;
+    try {
+      res = await this.fetchImpl(url, {
+        method: 'POST',
+        headers: { accept: 'application/json', 'content-type': 'application/json', 'user-agent': USER_AGENT },
+        body: JSON.stringify(body),
+        signal: AbortSignal.timeout(TIMEOUT_MS),
+      });
+    } catch (err) {
+      const reason = err instanceof Error ? err.message : String(err);
+      throw new NewsApiError(`Could not reach ${this.origin} (${reason}).`, 0);
+    }
+    const text = await res.text();
+    if (res.status === 200 || res.status === 202) {
+      try {
+        return { status: res.status, body: JSON.parse(text) as T };
+      } catch {
+        throw new NewsApiError(`News by Agents answered something other than JSON for ${path}.`, res.status);
+      }
+    }
+    const retryAfter = retryAfterSeconds(res.headers.get('retry-after'));
+    const message = errorMessageOf(text, res.status);
+    if (res.status === 429) throw new NewsApiError(describe429(message, retryAfter), 429, retryAfter);
+    if (res.status >= 500) throw new NewsApiError(`News by Agents answered ${res.status} (${message}). Try again shortly.`, res.status, retryAfter);
+    throw new NewsApiError(message, res.status, retryAfter);
+  }
+
   private async getJson<T>(path: string): Promise<T> {
     const res = await this.get(path, 'application/json');
     const text = await res.text();
@@ -253,6 +305,27 @@ export class NewsClient {
   async markdown(day: 'latest' | string): Promise<string> {
     const res = await this.get(`/${day === 'latest' ? 'latest' : encodeURIComponent(day)}.md`, 'text/markdown');
     return res.text();
+  }
+
+  /**
+   * Ask for the daily email at `email` (POST /api/news/subscribe). The site mails the address a link to confirm and
+   * sends nothing more until it is confirmed. Only the fields given are sent.
+   */
+  async subscribe(req: ApiSubscribeRequest): Promise<ApiSubscribeAnswer> {
+    const body: ApiSubscribeRequest = { email: req.email };
+    if (req.lang !== undefined && req.lang !== '') body.lang = req.lang;
+    if (req.region !== undefined) body.region = req.region;
+    if (req.timezone !== undefined && req.timezone !== '') body.timezone = req.timezone;
+    const { status, body: answer } = await this.postJson<Partial<ApiSubscribeAnswer>>(SUBSCRIBE_PATH, body);
+    if (answer === null || typeof answer !== 'object' || answer.state !== 'pending') {
+      throw new NewsApiError(`News by Agents answered ${status} to the subscription without saying it is pending confirmation.`, status);
+    }
+    return { state: 'pending', message: typeof answer.message === 'string' && answer.message.trim() !== '' ? answer.message : 'Check the inbox for a link to confirm.' };
+  }
+
+  /** Where the token from a confirmation email is POSTed, as {"token": "..."}, to confirm without the page. */
+  confirmUrl(): string {
+    return `${this.origin}${SUBSCRIBE_CONFIRM_PATH}`;
   }
 
   /** The page of an edition on the site. */

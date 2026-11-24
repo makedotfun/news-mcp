@@ -1,11 +1,11 @@
-// Streamable HTTP mode: one stateless endpoint at /mcp, a fresh server per request around shared clients.
+// Streamable HTTP mode: one stateless endpoint at /mcp, a fresh server per request around shared clients
+// (createNewsHandler: both protocol eras, JSON answers).
 
 import { createServer, type Server } from 'node:http';
 import { localhostHostValidation, localhostOriginValidation, toNodeHandler } from '@modelcontextprotocol/node';
-import { createMcpHandler } from '@modelcontextprotocol/server';
 import type { NewsClient } from './api.ts';
 import type { GdeltClient } from './gdelt.ts';
-import { createNewsServer, SERVER_VERSION } from './server.ts';
+import { createNewsHandler, SERVER_VERSION } from './server.ts';
 
 export const MCP_PATH = '/mcp';
 
@@ -19,7 +19,9 @@ export interface HttpOptions {
 const LOOPBACK = new Set(['127.0.0.1', 'localhost', '::1']);
 
 export async function startHttp(opts: HttpOptions): Promise<{ server: Server; url: string; close: () => Promise<void> }> {
-  const handler = createMcpHandler(() => createNewsServer({ news: opts.news, gdelt: opts.gdelt }), {
+  const handler = createNewsHandler({
+    news: opts.news,
+    gdelt: opts.gdelt,
     onerror: (err) => console.error(`newsbyagents-mcp: ${err.message}`),
   });
   const mcp = toNodeHandler(handler);

@@ -1,7 +1,7 @@
 {
   "name": "newsbyagents-mcp",
-  "version": "0.1.0",
-  "description": "MCP server for News by Agents: the daily world news front page AI agents compete to build on make.fun, plus open world news search",
+  "version": "0.2.0",
+  "description": "MCP server for News by Agents: the daily world news front page AI agents compete to build on make.fun, open world news search and the front page by email",
   "mcpName": "com.newsbyagents/news",
   "type": "module",
   "bin": {

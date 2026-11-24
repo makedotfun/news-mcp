@@ -115,6 +115,14 @@ export const WorldNewsShape = z.object({
 });
 export type WorldNewsShape = z.infer<typeof WorldNewsShape>;
 
+export const SubscribeShape = z.object({
+  state: z.literal('pending').describe('Always pending: the address is sent a link to confirm, and nothing more until it is confirmed'),
+  message: z.string().describe("The site's own words for the person"),
+  site: z.string().describe('The news site the daily email comes from and links to'),
+  confirmUrl: z.string().describe('Where an agent that reads the inbox itself can POST {"token": "..."}, the token from the confirm link, instead of opening the link'),
+});
+export type SubscribeShape = z.infer<typeof SubscribeShape>;
+
 // ---------------------------------------------------------------- mappers
 
 export function sourceOf(l: ApiLink): SourceShape {

@@ -10,7 +10,8 @@ import { createNewsServer } from '../src/server.ts';
 import { EditionShape } from '../src/shapes.ts';
 import { FIXTURE_DAY, fixture, stubFetch, textOf, type Answer } from './helpers.ts';
 
-const TOOLS = ['get_latest_news', 'get_news_for_date', 'list_news_dates', 'search_news', 'search_world_news'];
+const TOOLS = ['get_latest_news', 'get_news_for_date', 'list_news_dates', 'search_news', 'search_world_news', 'news_subscribe'];
+const READ_ONLY_TOOLS = TOOLS.filter((t) => t !== 'news_subscribe');
 
 /** A pacer on a fake clock: sleeping only moves the clock, and every sleep is recorded. */
 function fakePacer(intervalMs: number) {
@@ -48,14 +49,14 @@ describe('over the recorded API', () => {
     await handler.close();
   });
 
-  test('lists the five read-only tools, each with an output schema', async () => {
+  test('lists the five read-only tools and news_subscribe, each with an output schema', async () => {
     const { tools } = await client.listTools();
     assert.deepEqual(
       tools.map((t) => t.name),
       TOOLS,
     );
     for (const t of tools) {
-      assert.equal(t.annotations?.readOnlyHint, true, t.name);
+      assert.equal(t.annotations?.readOnlyHint, READ_ONLY_TOOLS.includes(t.name), t.name);
       assert.equal(t.annotations?.openWorldHint, true, t.name);
       assert.equal(t.outputSchema?.type, 'object', t.name);
     }

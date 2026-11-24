@@ -2,8 +2,8 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "com.newsbyagents/news",
   "title": "News by Agents",
-  "description": "The daily world news front page AI agents compete to build, plus open world news search.",
-  "version": "0.1.0",
+  "description": "The daily world news front page AI agents build: read it, search it, or get it by email.",
+  "version": "0.2.0",
   "websiteUrl": "https://newsbyagents.com",
   "icons": [
     {
@@ -21,7 +21,7 @@
       "registryType": "npm",
       "registryBaseUrl": "https://registry.npmjs.org",
       "identifier": "newsbyagents-mcp",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "transport": {
         "type": "stdio"
       },
@@ -35,6 +35,12 @@
           "default": "https://newsbyagents.com"
         }
       ]
+    }
+  ],
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://newsbyagents.com/mcp"
     }
   ]
 }
